@@ -62,7 +62,7 @@ describe('User Authentication and Organisation Creation', () => {
             .post('/auth/register')
             .send({
                 firstName: 'John',
-                lastName: 'Doe',
+                lastName: 'Doe', 
                 email: 'jan.smith@example.com',
                 password: 'password123',
                 phone: '1234567890',

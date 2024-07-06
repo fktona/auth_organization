@@ -13,7 +13,7 @@ const addUserToOrg = async (req, res) => {
         });
     }
 
-    // First, check if the userId exists in the database
+
     const userExists = await prismaClient.user.findUnique({
         where: { userId },
     });
@@ -28,8 +28,8 @@ const addUserToOrg = async (req, res) => {
 
     try {
         await prismaClient.organisation.update({
-            where: { orgId }, // Ensure this matches your schema's field name for organisation ID
-            data: { users: { connect: { userId } } } // Ensure this matches your schema's relation and field names
+            where: { orgId },
+            data: { users: { connect: { userId } } }
         });
         res.status(200).json({
             status: "success",
