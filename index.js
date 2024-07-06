@@ -7,7 +7,7 @@ const app = express();
 
 app.use(express.json());
 
-const PORT = process.env.PORT || 3000;
+var PORT = process.env.PORT || 3000;
 app.use('/auth', auth);
 app.use('/api', organizations);
 app.use('/api', userRecord);
