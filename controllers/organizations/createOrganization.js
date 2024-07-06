@@ -5,14 +5,16 @@ const prismaClient = new PrismaClient();
 const createOrganization = async (req, res) => {
     const { name, description } = req.body;
 
-    if (!name || !description) {
+    const missingFields = [];
+    if (!name) missingFields.push('name');
+    // if (!description) missingFields.push('description');
+    if (missingFields.length > 0) {
         return res.status(422).json({
-            errors: [
-                { field: "name", message: "Name is required" },
-                { field: "description", message: "Description is required" }
-            ]
+            errors: missingFields.map(field => ({ field, message: `${field} is required` }))
         });
     }
+
+    
     const createdBy = req.userId;  
     console.log(createdBy)
     try {

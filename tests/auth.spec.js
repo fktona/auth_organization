@@ -4,10 +4,10 @@ const { PrismaClient } = require('@prisma/client');
 
 const prisma = new PrismaClient();
 
-describe('User Authentication and Organisation', () => {
+describe('User Authentication and Organisation Creation', () => {
     beforeEach(async () => {
         await prisma.organisation.deleteMany({});
-        await prisma.user.deleteMany({});
+       await prisma.user.deleteMany({});
     });
 
     afterAll(async () => {
@@ -15,38 +15,38 @@ describe('User Authentication and Organisation', () => {
         server.close();
     });
 
-    it('Should register user successfully and create a default organisation', async () => {
+    it('Register user successfully and create a default organisation', async () => {
         const response = await request(app)
             .post('/auth/register')
             .send({
                 firstName: 'John',
                 lastName: 'Doe',
-                email: 'john.doe@example.com',
+                email: 'joohn.doe@example.com',
                 password: 'password123',
                 phone: '1234567890'
             });
 
         expect(response.statusCode).toBe(201);
         expect(response.body.status).toBe('success');
-        expect(response.body.data.user.email).toBe('john.doe@example.com');
+        expect(response.body.data.user.email).toBe('joohn.doe@example.com');
         expect(response.body.data.user.firstName).toBe('John');
         expect(response.body.data.accessToken).toBeDefined();
     });
 
-    it('Should verify the default organisation name is correctly generated', async () => {
+    it('Verify the default organisation name is correctly generated', async () => {
         const response = await request(app)
             .post('/auth/register')
             .send({
                 firstName: 'Jane',
                 lastName: 'Smith',
-                email: 'jane.smith@example.com',
+                email: 'jan.smith@example.com',
                 password: 'password123',
                 phone: '0987654321'
             });
 
         expect(response.statusCode).toBe(201);
         expect(response.body.status).toBe('success');
-        expect(response.body.data.user.email).toBe('jane.smith@example.com');
+        expect(response.body.data.user.email).toBe('jan.smith@example.com');
 
         const orgResponse = await request(app)
             .get('/api/organisations')
@@ -57,13 +57,38 @@ describe('User Authentication and Organisation', () => {
         expect(userOrg.name).toBe("Jane's Organisation");
     });
 
-    it('Should log the user in successfully', async () => {
+    it('Fail if email already exists', async () => {
         await request(app)
             .post('/auth/register')
             .send({
                 firstName: 'John',
                 lastName: 'Doe',
-                email: 'john.doe@example.com',
+                email: 'jan.smith@example.com',
+                password: 'password123',
+                phone: '1234567890',
+            });
+
+        const response = await request(app)
+            .post('/auth/register')
+            .send({
+                firstName: 'Jane',
+                lastName: 'Smith',
+                email: 'jan.smith@example.com',
+                password: 'password123',
+                phone: '0987654321' 
+            });
+
+        expect(response.statusCode).toBe(422);
+        expect(response.body.message).toBe('Email already exists');
+    });
+
+    it('Log the user in successfully', async () => {
+        await request(app)
+            .post('/auth/register')
+            .send({
+                firstName: 'John',
+                lastName: 'Doe',
+                email: 'joohn.doe@example.com',
                 password: 'password123',
                 phone: '1234567890'
             });
@@ -71,17 +96,39 @@ describe('User Authentication and Organisation', () => {
         const response = await request(app)
             .post('/auth/login')
             .send({
-                email: 'john.doe@example.com',
+                email: 'joohn.doe@example.com',
                 password: 'password123'
             });
 
         expect(response.statusCode).toBe(200);
         expect(response.body.status).toBe('success');
-        expect(response.body.data.user.email).toBe('john.doe@example.com');
+        expect(response.body.data.user.email).toBe('joohn.doe@example.com');
         expect(response.body.data.accessToken).toBeDefined();
     });
 
-    it('Should fail if required fields are missing', async () => {
+    it('Fail to log the user in with incorrect credentials', async () => {
+        await request(app)
+            .post('/auth/register')
+            .send({
+                firstName: 'John',
+                lastName: 'Doe',
+                email: 'john2@gma.co',
+                password: 'password',
+                phone: '1234567890'
+            });
+
+        const response = await request(app)
+            .post('/auth/login')
+            .send({
+                email: 'joh22@gmail.com',
+                password: 'password'
+            });
+
+        expect(response.statusCode).toBe(401);
+        expect(response.body.status).toBe('Bad request');
+    });
+
+    it('Fail if required fields are missing', async () => {
         const response = await request(app)
             .post('/auth/register')
             .send({
@@ -92,14 +139,14 @@ describe('User Authentication and Organisation', () => {
         expect(response.body.errors.length).toBeGreaterThan(0);
     });
 
-    it('Should fail if there’s duplicate email or userId', async () => {
+    it('Fail if there’s duplicate email or userId', async () => {
         // Register first user
         await request(app)
             .post('/auth/register')
             .send({
                 firstName: 'John',
                 lastName: 'Doe',
-                email: 'john.doe@example.com',
+                email: 'joohn.doe@example.com',
                 password: 'password123',
                 phone: '1234567890'
             });
@@ -110,7 +157,7 @@ describe('User Authentication and Organisation', () => {
             .send({
                 firstName: 'John',
                 lastName: 'Doe',
-                email: 'john.doe@example.com',
+                email: 'joohn.doe@example.com',
                 password: 'password123',
                 phone: '0987654321'
             });

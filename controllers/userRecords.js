@@ -2,27 +2,86 @@ const { PrismaClient } = require('@prisma/client');
 const prismaClient = new PrismaClient();
 
 const getUserRecord = async (req, res) => {
-    
-    const { id } = req.params;
+    const userId = req.userId; // Assume this is set by a middleware after validating the JWT
+    const { id } = req.params; // ID of the user record to retrieve
+
     try {
-        const user = await prismaClient.user.findUnique({ where: { userId: id } });
-        if (!user) {
+        // Find the user requesting the information
+        const requestingUser = await prismaClient.user.findUnique({
+            where: { userId: userId },
+            include: {
+                organisations: true // Include the organizations the requesting user belongs to
+            }
+        });
+
+        if (!requestingUser) {
             return res.status(404).json({
                 status: "Not found",
-                message: "User not found",
+                message: "Requesting user not found",
                 statusCode: 404
             });
         }
+
+        // Find the user whose record is being requested
+        const requestedUser = await prismaClient.user.findUnique({
+            where: { userId: id },
+            include: {
+                organisations: true
+            }
+        });
+
+        if (!requestedUser) {
+            return res.status(404).json({
+                status: "Not found",
+                message: "Requested user not found",
+                statusCode: 404
+            });
+        }
+
+        const {organisations,password, ...userData} = requestedUser;
+        console.log(userData)
+
+        if (!requestedUser) {
+            return res.status(404).json({
+                status: "Not found",
+                message: "Requested user not found",
+                statusCode: 404
+            });
+        }
+
+    
+        if (userId === id) {
+            return res.status(200).json({
+                status: "success",
+                message: "User found",
+                data: userData
+            });
+        }
+
+    
+        const commonOrganisations = requestingUser.organisations.filter(org =>
+            requestedUser.organisations.some(requestedOrg => requestedOrg.orgId === org.orgId)
+        );
+
+        if (commonOrganisations.length === 0) {
+            return res.status(403).json({
+                status: "Forbidden",
+                message: "You do not have access to this user's records",
+                statusCode: 403
+            });
+        }
+
         res.status(200).json({
             status: "success",
             message: "User found",
-            data: user
+            data: userData
         });
     } catch (error) {
-        res.status(400).json({
-            status: "Bad request",
+        res.status(500).json({
+            status: "Error",
             message: "Error retrieving user",
-            statusCode: 400
+            statusCode: 500,
+            error: error.message
         });
     }
 }

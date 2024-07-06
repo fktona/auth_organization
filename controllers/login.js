@@ -15,7 +15,6 @@ const login = async (req, res) => {
             return res.status(401).json({
                 status: "Bad request",
                 message: "Authentication failed",
-                error:error.message,
                 statusCode: 401
             });
         }
