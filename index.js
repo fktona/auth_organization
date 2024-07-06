@@ -4,21 +4,22 @@ const organizations = require('./routes/organizations');
 const userRecord = require('./routes/userRecord');
 
 const app = express();
-
 app.use(express.json());
 
-var PORT = process.env.PORT || 3000;
+
+const PORT = process.env.PORT || 3000;
+
 app.use('/auth', auth);
 app.use('/api', organizations);
 app.use('/api', userRecord);
 
-  
 
-server = app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+if (process.env.NODE_ENV !== 'cloud') {
+  const server = app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+  });
 
-module.exports ={ app , server};
-
-
-exports.app = app;
+  module.exports = { app, server };
+} else {
+  module.exports = { app };
+}

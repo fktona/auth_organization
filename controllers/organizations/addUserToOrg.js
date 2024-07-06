@@ -13,9 +13,22 @@ const addUserToOrg = async (req, res) => {
         });
     }
 
+    // Check if the organization exists
+    const orgExists = await prismaClient.organisation.findUnique({
+        where: {  orgId },
+    });
 
+    if (!orgExists) {
+        return res.status(404).json({
+            status: "Not Found",
+            message: "Organization not found",
+            statusCode: 404
+        });
+    }
+
+    // Check if the user exists
     const userExists = await prismaClient.user.findUnique({
-        where: { userId },
+        where: {  userId },
     });
 
     if (!userExists) {
@@ -26,18 +39,36 @@ const addUserToOrg = async (req, res) => {
         });
     }
 
+    // Check if the user is already in the organization
+    const userInOrg = await prismaClient.organisation.findFirst({
+        where: {
+             orgId,
+            users: {
+                some: {  userId }
+            }
+        }
+    });
+
+    if (userInOrg) {
+        return res.status(409).json({
+            status: "Conflict",
+            message: "User is already a member of the organization",
+            statusCode: 409
+        });
+    }
+
     try {
         await prismaClient.organisation.update({
-            where: { orgId },
-            data: { users: { connect: { userId } } }
+            where: {  orgId },
+            data: { users: { connect: {  userId } } }
         });
         res.status(200).json({
-            status: "success",
-            message: "User added to organisation successfully"
+            status: "Success",
+            message: "User added to organization successfully"
         });
     } catch (error) {
         res.status(400).json({
-            status: "Bad request",
+            status: "Bad Request",
             message: "Client error",
             error: error.message,
             statusCode: 400

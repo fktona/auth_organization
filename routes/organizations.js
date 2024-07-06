@@ -3,7 +3,7 @@ const  getEachOrganization  = require('../controllers/organizations/getEachOrgan
 const  createOrganization  = require('../controllers/organizations/createOrganization');
 const getUserOrganizations = require('../controllers/organizations/getUserOrganizations');
 const addUserToOrg = require('../controllers/organizations/addUserToOrg');
-const authMiddleware = require('../middlewares/authMiddleWare');
+const authMiddleware = require('../middlewares/authMiddleware');
 const router = express.Router();
 
 

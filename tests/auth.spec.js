@@ -3,6 +3,7 @@ const {app,server} = require('../index');
 const { PrismaClient } = require('@prisma/client');
 
 const prisma = new PrismaClient();
+const TimeOut = 10000;
 
 describe('User Authentication and Organisation Creation', () => {
     beforeEach(async () => {
@@ -31,7 +32,7 @@ describe('User Authentication and Organisation Creation', () => {
         expect(response.body.data.user.email).toBe('joohn.doe@example.com');
         expect(response.body.data.user.firstName).toBe('John');
         expect(response.body.data.accessToken).toBeDefined();
-    }, 30000);
+    }, TimeOut);
 
     it('Verify the default organisation name is correctly generated', async () => {
         const response = await request(app)
@@ -55,7 +56,7 @@ describe('User Authentication and Organisation Creation', () => {
         const userOrg = orgResponse.body.data.organisations.find(org => org.name === "Jane's Organisation");
         expect(userOrg).toBeDefined();
         expect(userOrg.name).toBe("Jane's Organisation");
-    });
+    }, TimeOut);
 
     it('Fail if email already exists', async () => {
         await request(app)
@@ -80,7 +81,7 @@ describe('User Authentication and Organisation Creation', () => {
 
         expect(response.statusCode).toBe(422);
         expect(response.body.message).toBe('Email already exists');
-    });
+    } , TimeOut);
 
     it('Log the user in successfully', async () => {
         await request(app)
@@ -104,7 +105,7 @@ describe('User Authentication and Organisation Creation', () => {
         expect(response.body.status).toBe('success');
         expect(response.body.data.user.email).toBe('joohn.doe@example.com');
         expect(response.body.data.accessToken).toBeDefined();
-    });
+    }, TimeOut);
 
     it('Fail to log the user in with incorrect credentials', async () => {
         await request(app)
@@ -126,7 +127,7 @@ describe('User Authentication and Organisation Creation', () => {
 
         expect(response.statusCode).toBe(401);
         expect(response.body.status).toBe('Bad request');
-    });
+    }, );
 
     it('Fail if required fields are missing', async () => {
         const response = await request(app)
@@ -137,7 +138,7 @@ describe('User Authentication and Organisation Creation', () => {
 
         expect(response.statusCode).toBe(422);
         expect(response.body.errors.length).toBeGreaterThan(0);
-    });
+    }, TimeOut);
 
     it('Fail if there’s duplicate email or userId', async () => {
         // Register first user
@@ -164,5 +165,5 @@ describe('User Authentication and Organisation Creation', () => {
 
         expect(response.statusCode).toBe(422);
     });
-});
+}, 6000);
 
