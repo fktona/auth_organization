@@ -21,3 +21,4 @@ server = app.listen(PORT, () => {
 module.exports ={ app , server};
 
 
+exports.app = app;
