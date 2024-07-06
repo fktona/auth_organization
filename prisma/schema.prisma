@@ -1,0 +1,32 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  userId         String         @id @default(cuid())
+  firstName      String
+  lastName       String
+  email          String         @unique
+  password       String
+  phone          String?
+  organisations  Organisation[] @relation("UserOrganisations")
+  createdOrgs    Organisation[] @relation("CreatedOrganisations")
+
+  @@index([email])
+}
+
+model Organisation {
+  orgId       String   @id @default(cuid())
+  name        String
+  description String?
+  createdBy   String   @unique
+  createdByUser User   @relation("CreatedOrganisations", fields: [createdBy], references: [userId])
+  users       User[]   @relation("UserOrganisations")
+
+  @@index([name])
+}
