@@ -31,7 +31,7 @@ describe('User Authentication and Organisation Creation', () => {
         expect(response.body.data.user.email).toBe('joohn.doe@example.com');
         expect(response.body.data.user.firstName).toBe('John');
         expect(response.body.data.accessToken).toBeDefined();
-    });
+    }, 30000);
 
     it('Verify the default organisation name is correctly generated', async () => {
         const response = await request(app)

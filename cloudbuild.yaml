@@ -1,8 +1,25 @@
 steps:
   - name: 'gcr.io/cloud-builders/npm'
     args: ['install']
+
+  - name: 'gcr.io/cloud-builders/npm'
+    entrypoint: 'npx'
+    args: ['prisma', 'generate']
+    env:
+      - DATABASE_URL=${_DATABASE_URL}
+      - JWT_SECRET=${_JWT_SECRET}
+
+  - name: 'gcr.io/cloud-builders/npm'
+    entrypoint: 'npx'
+    args: ['prisma', 'migrate', 'dev', '--name', 'init']
+    env:
+      - DATABASE_URL=${_DATABASE_URL}
+
   - name: 'gcr.io/cloud-builders/gcloud'
-    args: ['functions', 'deploy', 'AUTH_ORG', '--runtime', 'nodejs14', '--trigger-http', '--allow-unauthenticated', '--entry-point', 'app']
+    args: ['functions', 'deploy', 'AUTH_ORG', '--runtime', 'nodejs20', '--trigger-http', '--allow-unauthenticated', '--entry-point', 'app']
+    env:
+      - DATABASE_URL=${_DATABASE_URL}
+      - JWT_SECRET=${_JWT_SECRET}
 
 options:
-  logging: 'CLOUD_LOGGING_ONLY'  
+  logging: 'CLOUD_LOGGING_ONLY'
