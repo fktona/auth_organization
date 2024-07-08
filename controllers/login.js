@@ -9,6 +9,26 @@ const prismaClient = new PrismaClient();
 
 const login = async (req, res) => {
     const { email, password } = req.body;
+
+    const missingFields = [];
+    if (!email) missingFields.push('email');
+    if (!password) missingFields.push('password');
+      
+    
+    if (missingFields.length > 0) {
+      return res.status(422).json({
+        errors: missingFields.map(field => ({ field, message: `${field} is required` }))
+      });
+    }
+  
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(422).json({
+        errors: [{ field: 'email', message: 'email is invalid' }]
+      });
+    }
+  
+    
     try {
         const user = await prismaClient.user.findUnique({ where: { email } });
         if (!user || !(await bcrypt.compare(password, user.password))) {

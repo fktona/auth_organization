@@ -7,7 +7,6 @@ const createOrganization = async (req, res) => {
 
     const missingFields = [];
     if (!name) missingFields.push('name');
-    // if (!description) missingFields.push('description');
     if (missingFields.length > 0) {
         return res.status(422).json({
             errors: missingFields.map(field => ({ field, message: `${field} is required` }))
@@ -21,10 +20,15 @@ const createOrganization = async (req, res) => {
         const organisation = await prismaClient.organisation.create({
             data: { name, description , createdBy}
         });
+
+    
         res.status(201).json({
             status: "success",
             message: "Organisation created successfully",
-            data: organisation
+            data: {
+                name: organisation.name,
+                description: organisation.description
+            }
         });
     } catch (error) {
         res.status(400).json({
