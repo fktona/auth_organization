@@ -20,13 +20,13 @@ const validateUser = async (req, res, next) => {
   }
   
 // Regex to validate international and local phone numbers, including various formats
-    const phoneRegex = /^(\+(\d{1,3})[- ]?(\d{1,4})[- ]?(\d{4,})|(\(\d{3}\)|\d{3})[- ]?\d{3}[- ]?\d{4}|0\d(\s?\d){8})$/;
+    const phoneRegex = /^(\+?[1-9]\d{0,14}|0\d{9,10}|(\(?\d{1,4}\)?[-.\s]?)?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9})$/;
 
-    if (phone && !phoneRegex.test(phone.replace(/\s/g, ''))) {
-        return res.status(422).json({
-            errors: [{ field: 'phone', message: 'Phone must be a valid international or local number' }]
-        });
-    }
+if (phone && !phoneRegex.test(phone.replace(/\s/g, ''))) {
+    return res.status(422).json({
+        errors: [{ field: 'phone', message: 'Phone must be a valid international or local number' }]
+    });
+}
 
     
   
