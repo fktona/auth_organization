@@ -11,7 +11,7 @@ const validateUser = async (req, res, next) => {
   if (!lastName) missingFields.push('lastName');
   if (!email) missingFields.push('email');
   if (!password) missingFields.push('password');
-  const phoneRegex = /^\d+$/;
+  
 
   if (missingFields.length > 0) {
     return res.status(422).json({
@@ -19,11 +19,14 @@ const validateUser = async (req, res, next) => {
     });
   }
   
-  if (!phoneRegex.test(phone) && phone.length >0) {
-    return res.status(422).json({
-      errors: [{ field: 'phone', message: 'phone must be a number' }]
-    });
-  }
+// Regex to validate international and local phone numbers, including various formats
+    const phoneRegex = /^(\+(\d{1,3})[- ]?(\d{1,4})[- ]?(\d{4,})|(\(\d{3}\)|\d{3})[- ]?\d{3}[- ]?\d{4}|0\d(\s?\d){8})$/;
+
+    if (phone && !phoneRegex.test(phone.replace(/\s/g, ''))) {
+        return res.status(422).json({
+            errors: [{ field: 'phone', message: 'Phone must be a valid international or local number' }]
+        });
+    }
 
     
   
