@@ -10,9 +10,8 @@ app.use(express.json());
 const PORT = process.env.PORT || 3000;
 
 app.use('/auth', auth);
-app.use('/api', organizations);
+app.use('/api', organizations); 
 app.use('/api', userRecord);
-
 
 if (process.env.NODE_ENV !== 'cloud') {
   const server = app.listen(PORT, () => {
