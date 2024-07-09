@@ -3,9 +3,7 @@ const prismaClient = new PrismaClient();
 
 const validateUser = async (req, res, next) => {
     const { firstName, lastName, email, password , phone } = req.body;
-    const existingUser = await prismaClient.user.findUnique({
-        where: { email }
-      });
+    
   
 
       const missingFields = [];
@@ -38,7 +36,9 @@ const validateUser = async (req, res, next) => {
     });
   }
 
-
+const existingUser = await prismaClient.user.findUnique({
+        where: { email }
+      });
   
   if (existingUser) {
     return res.status(422).json({
