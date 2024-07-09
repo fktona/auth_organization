@@ -14,6 +14,12 @@ const validateUser = async (req, res, next) => {
   if (!email) missingFields.push('email');
   if (!password) missingFields.push('password');
   const phoneRegex = /^\d+$/;
+
+  if (missingFields.length > 0) {
+    return res.status(422).json({
+      errors: missingFields.map(field => ({ field, message: `${field} is required` }))
+    });
+  }
   
   if (!phoneRegex.test(phone) && phone.length >0) {
     return res.status(422).json({
@@ -23,11 +29,7 @@ const validateUser = async (req, res, next) => {
 
     
   
-  if (missingFields.length > 0) {
-    return res.status(422).json({
-      errors: missingFields.map(field => ({ field, message: `${field} is required` }))
-    });
-  }
+  
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email)) {
