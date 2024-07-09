@@ -5,7 +5,7 @@ const addUserToOrg = async (req, res) => {
     const { orgId } = req.params;
     const { userId } = req.body;
 
-    if (!userId) {
+    if (!userId || !orgId) {
         return res.status(422).json({
             errors: [
                 { field: "userId", message: "User ID is required" }

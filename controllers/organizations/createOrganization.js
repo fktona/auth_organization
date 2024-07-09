@@ -26,8 +26,10 @@ const createOrganization = async (req, res) => {
             status: "success",
             message: "Organisation created successfully",
             data: {
+                orgId: organisation.orgId,  
                 name: organisation.name,
-                description: organisation.description
+                description: organisation.description,
+                
             }
         });
     } catch (error) {

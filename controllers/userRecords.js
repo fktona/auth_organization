@@ -2,8 +2,15 @@ const { PrismaClient } = require('@prisma/client');
 const prismaClient = new PrismaClient();
 
 const getUserRecord = async (req, res) => {
-    const userId = req.userId; // Assume this is set by a middleware after validating the JWT
-    const { id } = req.params; // ID of the user record to retrieve
+    const userId = req.userId; 
+    const { id } = req.params; 
+    if (!id || !userId) {
+        return res.status(400).json({
+            status: "Bad request",
+            message: "User ID is required",
+            statusCode: 400
+        });
+    }
 
     try {
         // Find the user requesting the information

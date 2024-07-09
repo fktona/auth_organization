@@ -19,6 +19,7 @@ const validateUser = async (req, res, next) => {
         });
     }
 
+
     let parsedPhone;
     try {
         parsedPhone = parsePhoneNumberFromString(phone);
@@ -33,7 +34,7 @@ const validateUser = async (req, res, next) => {
         });
     }
    console.log(parsedPhone);
-    if (!parsedPhone || !parsedPhone.isValid() || !isPossiblePhoneNumber(parsedPhone.number) || phone.length < 8 || phone.length > 15) {
+    if (!parsedPhone || !parsedPhone.isValid() || !isPossiblePhoneNumber(parsedPhone.number) || parsedPhone.number.length < 8 || parsedPhone.number.length > 15) {
         return res.status(422).json({
             errors: [{ field: 'phone', message: 'Phone must be a valid international or local number' }]
         });
@@ -46,6 +47,13 @@ const validateUser = async (req, res, next) => {
         });
     }
 
+
+    
+    if (password.length < 4) {
+      return res.status(422).json({
+          errors: [{ field: 'password', message: 'Password must be at least 4 characters' }]
+      });
+  }
     const existingUser = await prismaClient.user.findUnique({
         where: { email }
     });

@@ -3,6 +3,13 @@ const { PrismaClient } = require('@prisma/client');
 const prismaClient = new PrismaClient();
 const getEachOrganization = async (req, res) => {
     const { orgId } = req.params;
+    if (!orgId) {
+        return res.status(400).json({
+            status: "Bad request",
+            message: "Organisation ID is required",
+            statusCode: 400
+        });
+    }
     try {
         const organisation = await prismaClient.organisation.findUnique({ where: { orgId } });
         if (!organisation) {

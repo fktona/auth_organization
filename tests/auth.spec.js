@@ -24,7 +24,7 @@ describe('User Authentication and Organisation Creation', () => {
                 lastName: 'Doe',
                 email: 'joohn.doe@example.com',
                 password: 'password123',
-                phone: '1234567890'
+                phone: '+447911123456'
             });
 
         expect(response.statusCode).toBe(201);
@@ -42,7 +42,7 @@ describe('User Authentication and Organisation Creation', () => {
                 lastName: 'Smith',
                 email: 'jan.smith@example.com',
                 password: 'password123',
-                phone: '0987654321'
+                phone: '+447911123456'
             });
 
         expect(response.statusCode).toBe(201);
@@ -66,7 +66,7 @@ describe('User Authentication and Organisation Creation', () => {
                 lastName: 'Doe', 
                 email: 'jan.smith@example.com',
                 password: 'password123',
-                phone: '1234567890',
+                phone: '+447911123456',
             });
 
         const response = await request(app)
@@ -76,7 +76,7 @@ describe('User Authentication and Organisation Creation', () => {
                 lastName: 'Smith',
                 email: 'jan.smith@example.com',
                 password: 'password123',
-                phone: '0987654321' 
+                phone: '+447911123456' 
             });
 
         expect(response.statusCode).toBe(422);
@@ -91,7 +91,7 @@ describe('User Authentication and Organisation Creation', () => {
                 lastName: 'Doe',
                 email: 'joohn.doe@example.com',
                 password: 'password123',
-                phone: '1234567890'
+                phone: '+447911123456'
             });
 
         const response = await request(app)
@@ -115,7 +115,7 @@ describe('User Authentication and Organisation Creation', () => {
                 lastName: 'Doe',
                 email: 'john2@gma.co',
                 password: 'password',
-                phone: '1234567890'
+                phone: '+447911123456'
             });
 
         const response = await request(app)
@@ -149,7 +149,7 @@ describe('User Authentication and Organisation Creation', () => {
                 lastName: 'Doe',
                 email: 'joohn.doe@example.com',
                 password: 'password123',
-                phone: '1234567890'
+                phone: '+447911123456'
             });
 
         // Attempt to register second user with the same email
@@ -160,7 +160,7 @@ describe('User Authentication and Organisation Creation', () => {
                 lastName: 'Doe',
                 email: 'joohn.doe@example.com',
                 password: 'password123',
-                phone: '0987654321'
+                phone: '+447911123456'
             });
 
         expect(response.statusCode).toBe(422);
