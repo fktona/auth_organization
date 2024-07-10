@@ -22,7 +22,11 @@ const getEachOrganization = async (req, res) => {
         res.status(200).json({
             status: "success",
             message: "Organisation found",
-            data: organisation
+            data: {
+                orgId: organisation.orgId,
+                name: organisation.name,
+                description: organisation.description,
+            }
         });
     } catch (error) {
         res.status(400).json({
