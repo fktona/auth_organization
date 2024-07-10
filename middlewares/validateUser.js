@@ -20,25 +20,25 @@ const validateUser = async (req, res, next) => {
     }
 
 
-    let parsedPhone;
-    try {
-        parsedPhone = parsePhoneNumberFromString(phone);
+//     let parsedPhone;
+//     try {
+//         parsedPhone = parsePhoneNumberFromString(phone);
 
-        if (!parsedPhone || !parsedPhone.isValid()) {
-            const defaultCountryCode = 'NG'; 
-            parsedPhone = parsePhoneNumberFromString(phone, defaultCountryCode);
-        }
-    } catch (error) {
-        return res.status(422).json({
-            errors: [{ field: 'phone', message: 'Phone must be a valid international or local number' }]
-        });
-    }
-   console.log(parsedPhone);
-    if (!parsedPhone || !parsedPhone.isValid() || !isPossiblePhoneNumber(parsedPhone.number) || parsedPhone.number.length < 8 || parsedPhone.number.length > 15) {
-        return res.status(422).json({
-            errors: [{ field: 'phone', message: 'Phone must be a valid international or local number' }]
-        });
-    }
+//         if (!parsedPhone || !parsedPhone.isValid()) {
+//             const defaultCountryCode = 'NG'; 
+//             parsedPhone = parsePhoneNumberFromString(phone, defaultCountryCode);
+//         }
+//     } catch (error) {
+//         return res.status(422).json({
+//             errors: [{ field: 'phone', message: 'Phone must be a valid international or local number' }]
+//         });
+//     }
+//    console.log(parsedPhone);
+//     if (!parsedPhone || !parsedPhone.isValid() || !isPossiblePhoneNumber(parsedPhone.number) || parsedPhone.number.length < 8 || parsedPhone.number.length > 15) {
+//         return res.status(422).json({
+//             errors: [{ field: 'phone', message: 'Phone must be a valid international or local number' }]
+//         });
+//     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
