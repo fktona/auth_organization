@@ -64,7 +64,7 @@ const addUserToOrg = async (req, res) => {
         });
         res.status(200).json({
             status: "success",
-            message: "User added to organization successfully"
+            message: "User added to organisation successfully"
         });
     } catch (error) {
         res.status(400).json({
