@@ -8,8 +8,11 @@ const createOrganization = async (req, res) => {
     const missingFields = [];
     if (!name) missingFields.push('name');
     if (missingFields.length > 0) {
-        return res.status(422).json({
-            errors: missingFields.map(field => ({ field, message: `${field} is required` }))
+        return res.status(400).json({
+            "status": "Bad request",
+            "message": "Client error",
+            // errors: missingFields.map(field => ({ field, message: `${field} is required` }))
+            "statusCode": 400,
         });
     }
 

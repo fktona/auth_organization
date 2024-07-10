@@ -49,20 +49,20 @@ const validateUser = async (req, res, next) => {
 
 
     
-    if (password.length < 4) {
-      return res.status(422).json({
-          errors: [{ field: 'password', message: 'Password must be at least 4 characters' }]
-      });
-  }
+//     if (password.length < 4) {
+//       return res.status(422).json({
+//           errors: [{ field: 'password', message: 'Password must be at least 4 characters' }]
+//       });
+//   }
     const existingUser = await prismaClient.user.findUnique({
         where: { email }
     });
 
     if (existingUser) {
-        return res.status(422).json({
-            status: 'Unprocessable Entity',
-            message: 'Email already exists',
-            statusCode: 422
+        return res.status(400).json({
+            status: 'Bad request',
+            message: 'Registration unsuccessful',
+            statusCode: 400
         });
     }
 

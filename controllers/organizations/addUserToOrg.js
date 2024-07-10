@@ -51,7 +51,7 @@ const addUserToOrg = async (req, res) => {
 
     if (userInOrg) {
         return res.status(409).json({
-            status: "Conflict",
+            status: "conflict",
             message: "User is already a member of the organization",
             statusCode: 409
         });
@@ -63,7 +63,7 @@ const addUserToOrg = async (req, res) => {
             data: { users: { connect: {  userId } } }
         });
         res.status(200).json({
-            status: "Success",
+            status: "success",
             message: "User added to organization successfully"
         });
     } catch (error) {
